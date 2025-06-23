@@ -1,0 +1,6 @@
+global.json
+// 屏蔽构建目录
+obj/
+bin/
+.DS_Store
+.fake
