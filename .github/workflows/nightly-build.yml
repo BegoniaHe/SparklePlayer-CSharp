@@ -1,5 +1,11 @@
 name: Nightly Build
 
+# 添加权限配置
+permissions:
+  contents: write
+  actions: read
+  pull-requests: read
+
 on:
   schedule:
     # 每天凌晨 2:00 UTC (北京时间上午 10:00) 运行
@@ -207,42 +213,50 @@ jobs:
 
       - name: Create release
         id: create_release
-        uses: actions/create-release@v1
+        run: |
+          # 创建release说明
+          cat > release_notes.md << 'EOF'
+          ## 🌟 SparklePlayer Nightly Build
+          
+          **版本:** ${{ steps.build-info.outputs.version_suffix }}
+          **构建时间:** $(date -u)
+          **Commit:** ${{ github.sha }}
+          **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
+          
+          ### 📦 下载链接
+          下载链接将根据实际构建成功的平台显示
+          
+          ### ⚠️ 注意事项
+          这是自动构建的预览版本，仅用于测试和预览新功能。
+          不建议在生产环境中使用。
+          
+          ### 🔄 自动更新
+          此版本会每24小时自动更新一次。
+          EOF
+          
+          # 使用GitHub CLI创建release
+          gh release create ${{ steps.build-info.outputs.tag_name }} \
+            --title "${{ steps.build-info.outputs.release_name }}" \
+            --notes-file release_notes.md \
+            --prerelease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.build-info.outputs.tag_name }}
-          release_name: ${{ steps.build-info.outputs.release_name }}
-          body: |
-            ## 🌟 SparklePlayer Nightly Build
-            
-            **版本:** ${{ steps.build-info.outputs.version_suffix }}
-            **构建时间:** $(date -u) UTC
-            **Commit:** ${{ github.sha }}
-            **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
-            
-            ### 📦 下载链接
-            下载链接将根据实际构建成功的平台显示
-            
-            ### ⚠️ 注意事项
-            这是自动构建的预览版本，仅用于测试和预览新功能。
-            不建议在生产环境中使用。
-            
-            ### 🔄 自动更新
-            此版本会每24小时自动更新一次。
-          draft: false
-          prerelease: true
 
       - name: Check available artifacts and upload
         run: |
           echo "Checking for available artifacts..."
+          ls -la ./artifacts/ 2>/dev/null || echo "No artifacts directory found"
+          
+          # 检查并上传构建产物
+          uploaded_count=0
           
           # 上传 Linux x64 构建产物 (如果存在)
           if [ -f "./artifacts/SparklePlayer-linux-x64/SparklePlayer-linux-x64.tar.gz" ]; then
             echo "✅ Uploading Linux x64 build..."
             gh release upload ${{ steps.build-info.outputs.tag_name }} \
               "./artifacts/SparklePlayer-linux-x64/SparklePlayer-linux-x64.tar.gz" \
-              --clobber
+              --clobber || echo "Failed to upload Linux build"
+            uploaded_count=$((uploaded_count + 1))
           else
             echo "❌ Linux x64 build not available"
           fi
@@ -252,7 +266,8 @@ jobs:
             echo "✅ Uploading Windows x64 build..."
             gh release upload ${{ steps.build-info.outputs.tag_name }} \
               "./artifacts/SparklePlayer-windows-x64/SparklePlayer-windows-x64.zip" \
-              --clobber
+              --clobber || echo "Failed to upload Windows build"
+            uploaded_count=$((uploaded_count + 1))
           else
             echo "❌ Windows x64 build not available"
           fi
@@ -262,9 +277,34 @@ jobs:
             echo "✅ Uploading macOS ARM64 build..."
             gh release upload ${{ steps.build-info.outputs.tag_name }} \
               "./artifacts/SparklePlayer-macos-arm64/SparklePlayer-macos-arm64.tar.gz" \
-              --clobber
+              --clobber || echo "Failed to upload macOS build"
+            uploaded_count=$((uploaded_count + 1))
           else
             echo "❌ macOS ARM64 build not available"
+          fi
+          
+          echo "Successfully uploaded $uploaded_count build(s)"
+          
+          # 如果没有任何构建成功，更新release说明
+          if [ $uploaded_count -eq 0 ]; then
+            echo "⚠️ No builds were successful, updating release notes..."
+            cat > failed_release_notes.md << 'EOF'
+          ## ❌ SparklePlayer Nightly Build - All Builds Failed
+          
+          **版本:** ${{ steps.build-info.outputs.version_suffix }}
+          **构建时间:** $(date -u)
+          **Commit:** ${{ github.sha }}
+          **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
+          
+          ### ⚠️ 构建状态
+          所有平台的构建都失败了，请检查构建日志获取详细信息。
+          
+          ### 🔧 故障排除
+          请查看GitHub Actions日志了解构建失败的原因。
+          EOF
+            
+            gh release edit ${{ steps.build-info.outputs.tag_name }} \
+              --notes-file failed_release_notes.md || echo "Failed to update release notes"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
