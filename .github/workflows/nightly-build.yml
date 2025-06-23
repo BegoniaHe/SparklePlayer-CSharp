@@ -214,12 +214,15 @@ jobs:
       - name: Create release
         id: create_release
         run: |
+          # 获取当前时间
+          CURRENT_TIME=$(date -u)
+          
           # 创建release说明
-          cat > release_notes.md << 'EOF'
+          cat > release_notes.md << EOF
           ## 🌟 SparklePlayer Nightly Build
           
           **版本:** ${{ steps.build-info.outputs.version_suffix }}
-          **构建时间:** $(date -u)
+          **构建时间:** ${CURRENT_TIME}
           **Commit:** ${{ github.sha }}
           **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
           
@@ -288,11 +291,12 @@ jobs:
           # 如果没有任何构建成功，更新release说明
           if [ $uploaded_count -eq 0 ]; then
             echo "⚠️ No builds were successful, updating release notes..."
-            cat > failed_release_notes.md << 'EOF'
+            CURRENT_TIME=$(date -u)
+            cat > failed_release_notes.md << EOF
           ## ❌ SparklePlayer Nightly Build - All Builds Failed
           
           **版本:** ${{ steps.build-info.outputs.version_suffix }}
-          **构建时间:** $(date -u)
+          **构建时间:** ${CURRENT_TIME}
           **Commit:** ${{ github.sha }}
           **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
           
