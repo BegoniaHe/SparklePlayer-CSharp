@@ -5,3 +5,16 @@ bin/
 .DS_Store
 .fake
 .vs/
+
+# 构建和发布产物
+publish/
+artifacts/
+*.tar.gz
+*.zip
+
+# IDE 和编辑器文件
+.vscode/
+.idea/
+*.user
+*.suo
+*.cache

@@ -1,0 +1,267 @@
+name: Nightly Build
+
+on:
+  schedule:
+    # 每天凌晨 2:00 UTC (北京时间上午 10:00) 运行
+    - cron: '0 2 * * *'
+  workflow_dispatch:  # 允许手动触发
+    inputs:
+      version_suffix:
+        description: '版本后缀 (留空则使用时间戳)'
+        required: false
+        default: ''
+        type: string
+      platforms:
+        description: '要构建的平台'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - windows-only
+        - macos-only
+        - linux-only
+      cleanup_prereleases:
+        description: '是否清理现有的预发布版本'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  cleanup-prereleases:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.cleanup_prereleases) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Delete existing prereleases
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            
+            const prereleases = releases.filter(release => release.prerelease);
+            
+            for (const release of prereleases) {
+              console.log(`Deleting prerelease: ${release.tag_name}`);
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id,
+              });
+              
+              // 同时删除对应的 tag
+              try {
+                await github.rest.git.deleteRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `tags/${release.tag_name}`,
+                });
+                console.log(`Deleted tag: ${release.tag_name}`);
+              } catch (error) {
+                console.log(`Tag ${release.tag_name} might not exist: ${error.message}`);
+              }
+            }
+
+  build:
+    needs: cleanup-prereleases
+    if: always() && (needs.cleanup-prereleases.result == 'success' || needs.cleanup-prereleases.result == 'skipped')
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            runtime: linux-x64
+            artifact-name: SparklePlayer-linux-x64
+            platform: linux
+          - os: windows-latest
+            runtime: win-x64
+            artifact-name: SparklePlayer-windows-x64
+            platform: windows
+          - os: macos-latest
+            runtime: osx-arm64
+            artifact-name: SparklePlayer-macos-arm64
+            platform: macos
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          inputs.platforms == 'all' ||
+          (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
+          (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
+          (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          inputs.platforms == 'all' ||
+          (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
+          (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
+          (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
+
+      - name: Restore dependencies
+        run: dotnet restore SparklePlayer/SparklePlayer.csproj
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          inputs.platforms == 'all' ||
+          (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
+          (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
+          (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
+
+      - name: Build and publish
+        run: |
+          dotnet publish SparklePlayer/SparklePlayer.csproj \
+            --configuration Release \
+            --runtime ${{ matrix.runtime }} \
+            --self-contained true \
+            --output ./publish/${{ matrix.runtime }} \
+            -p:PublishSingleFile=true \
+            -p:PublishTrimmed=false
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          inputs.platforms == 'all' ||
+          (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
+          (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
+          (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
+
+      - name: Create archive (Linux/macOS)
+        if: |
+          matrix.os != 'windows-latest' &&
+          (github.event_name != 'workflow_dispatch' ||
+           inputs.platforms == 'all' ||
+           (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
+           (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
+           (inputs.platforms == 'linux-only' && matrix.platform == 'linux'))
+        run: |
+          cd ./publish/${{ matrix.runtime }}
+          tar -czf ../../${{ matrix.artifact-name }}.tar.gz *
+
+      - name: Create archive (Windows)
+        if: |
+          matrix.os == 'windows-latest' &&
+          (github.event_name != 'workflow_dispatch' ||
+           inputs.platforms == 'all' ||
+           (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
+           (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
+           (inputs.platforms == 'linux-only' && matrix.platform == 'linux'))
+        run: |
+          cd ./publish/${{ matrix.runtime }}
+          7z a ../../${{ matrix.artifact-name }}.zip *
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: |
+            ${{ matrix.artifact-name }}.tar.gz
+            ${{ matrix.artifact-name }}.zip
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          inputs.platforms == 'all' ||
+          (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
+          (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
+          (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
+
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Generate build info
+        id: build-info
+        run: |
+          # 生成版本号和标签名
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.version_suffix }}" ]; then
+            # 手动触发且有自定义后缀
+            VERSION_SUFFIX="${{ inputs.version_suffix }}"
+            TAG_NAME="nightly-${VERSION_SUFFIX}"
+            RELEASE_NAME="Nightly Build ${VERSION_SUFFIX}"
+          else
+            # 自动触发或手动触发无自定义后缀，使用时间戳
+            BUILD_TIME=$(date -u +"%Y.%m.%d.%H%M")
+            TAG_NAME="nightly-${BUILD_TIME}"
+            RELEASE_NAME="Nightly Build ${BUILD_TIME}"
+            VERSION_SUFFIX="${BUILD_TIME}"
+          fi
+          
+          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
+          echo "release_name=${RELEASE_NAME}" >> $GITHUB_OUTPUT
+          echo "version_suffix=${VERSION_SUFFIX}" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.build-info.outputs.tag_name }}
+          release_name: ${{ steps.build-info.outputs.release_name }}
+          body: |
+            ## 🌟 SparklePlayer Nightly Build
+            
+            **版本:** ${{ steps.build-info.outputs.version_suffix }}
+            **构建时间:** $(date -u) UTC
+            **Commit:** ${{ github.sha }}
+            **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
+            
+            ### 📦 下载链接
+            - **Windows x64:** SparklePlayer-windows-x64.zip
+            - **macOS ARM64:** SparklePlayer-macos-arm64.tar.gz  
+            - **Linux x64:** SparklePlayer-linux-x64.tar.gz
+            
+            ### ⚠️ 注意事项
+            这是自动构建的预览版本，仅用于测试和预览新功能。
+            不建议在生产环境中使用。
+            
+            ### 🔄 自动更新
+            此版本会每24小时自动更新一次。
+          draft: false
+          prerelease: true
+
+      - name: Upload Linux x64 Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/SparklePlayer-linux-x64/SparklePlayer-linux-x64.tar.gz
+          asset_name: SparklePlayer-linux-x64.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Windows x64 Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/SparklePlayer-windows-x64/SparklePlayer-windows-x64.zip
+          asset_name: SparklePlayer-windows-x64.zip
+          asset_content_type: application/zip
+
+      - name: Upload macOS ARM64 Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/SparklePlayer-macos-arm64/SparklePlayer-macos-arm64.tar.gz
+          asset_name: SparklePlayer-macos-arm64.tar.gz
+          asset_content_type: application/gzip
