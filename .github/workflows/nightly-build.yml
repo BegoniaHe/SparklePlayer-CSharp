@@ -120,14 +120,9 @@ jobs:
           (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
 
       - name: Build and publish
-        run: |
-          dotnet publish SparklePlayer/SparklePlayer.csproj \
-            --configuration Release \
-            --runtime ${{ matrix.runtime }} \
-            --self-contained true \
-            --output ./publish/${{ matrix.runtime }} \
-            -p:PublishSingleFile=true \
-            -p:PublishTrimmed=false
+        run: dotnet publish SparklePlayer/SparklePlayer.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }} -p:PublishSingleFile=true -p:PublishTrimmed=false
+        continue-on-error: true
+        id: build-step
         if: |
           github.event_name != 'workflow_dispatch' ||
           inputs.platforms == 'all' ||
@@ -137,6 +132,7 @@ jobs:
 
       - name: Create archive (Linux/macOS)
         if: |
+          steps.build-step.outcome == 'success' &&
           matrix.os != 'windows-latest' &&
           (github.event_name != 'workflow_dispatch' ||
            inputs.platforms == 'all' ||
@@ -149,6 +145,7 @@ jobs:
 
       - name: Create archive (Windows)
         if: |
+          steps.build-step.outcome == 'success' &&
           matrix.os == 'windows-latest' &&
           (github.event_name != 'workflow_dispatch' ||
            inputs.platforms == 'all' ||
@@ -167,14 +164,16 @@ jobs:
             ${{ matrix.artifact-name }}.tar.gz
             ${{ matrix.artifact-name }}.zip
         if: |
-          github.event_name != 'workflow_dispatch' ||
+          steps.build-step.outcome == 'success' &&
+          (github.event_name != 'workflow_dispatch' ||
           inputs.platforms == 'all' ||
           (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
           (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
-          (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
+          (inputs.platforms == 'linux-only' && matrix.platform == 'linux'))
 
   create-release:
     needs: build
+    if: always() && (needs.build.result == 'success' || needs.build.result == 'failure')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -223,9 +222,7 @@ jobs:
             **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
             
             ### 📦 下载链接
-            - **Windows x64:** SparklePlayer-windows-x64.zip
-            - **macOS ARM64:** SparklePlayer-macos-arm64.tar.gz  
-            - **Linux x64:** SparklePlayer-linux-x64.tar.gz
+            下载链接将根据实际构建成功的平台显示
             
             ### ⚠️ 注意事项
             这是自动构建的预览版本，仅用于测试和预览新功能。
@@ -236,32 +233,38 @@ jobs:
           draft: false
           prerelease: true
 
-      - name: Upload Linux x64 Release Asset
-        uses: actions/upload-release-asset@v1
+      - name: Check available artifacts and upload
+        run: |
+          echo "Checking for available artifacts..."
+          
+          # 上传 Linux x64 构建产物 (如果存在)
+          if [ -f "./artifacts/SparklePlayer-linux-x64/SparklePlayer-linux-x64.tar.gz" ]; then
+            echo "✅ Uploading Linux x64 build..."
+            gh release upload ${{ steps.build-info.outputs.tag_name }} \
+              "./artifacts/SparklePlayer-linux-x64/SparklePlayer-linux-x64.tar.gz" \
+              --clobber
+          else
+            echo "❌ Linux x64 build not available"
+          fi
+          
+          # 上传 Windows x64 构建产物 (如果存在)
+          if [ -f "./artifacts/SparklePlayer-windows-x64/SparklePlayer-windows-x64.zip" ]; then
+            echo "✅ Uploading Windows x64 build..."
+            gh release upload ${{ steps.build-info.outputs.tag_name }} \
+              "./artifacts/SparklePlayer-windows-x64/SparklePlayer-windows-x64.zip" \
+              --clobber
+          else
+            echo "❌ Windows x64 build not available"
+          fi
+          
+          # 上传 macOS ARM64 构建产物 (如果存在)
+          if [ -f "./artifacts/SparklePlayer-macos-arm64/SparklePlayer-macos-arm64.tar.gz" ]; then
+            echo "✅ Uploading macOS ARM64 build..."
+            gh release upload ${{ steps.build-info.outputs.tag_name }} \
+              "./artifacts/SparklePlayer-macos-arm64/SparklePlayer-macos-arm64.tar.gz" \
+              --clobber
+          else
+            echo "❌ macOS ARM64 build not available"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/SparklePlayer-linux-x64/SparklePlayer-linux-x64.tar.gz
-          asset_name: SparklePlayer-linux-x64.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Windows x64 Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/SparklePlayer-windows-x64/SparklePlayer-windows-x64.zip
-          asset_name: SparklePlayer-windows-x64.zip
-          asset_content_type: application/zip
-
-      - name: Upload macOS ARM64 Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/SparklePlayer-macos-arm64/SparklePlayer-macos-arm64.tar.gz
-          asset_name: SparklePlayer-macos-arm64.tar.gz
-          asset_content_type: application/gzip
