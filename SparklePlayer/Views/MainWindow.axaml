@@ -34,9 +34,12 @@
     </Design.DataContext>
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-    <TextBlock Text="{Binding Greeting}"/>
+    <TextBlock Text="{Binding Greeting}" FontFamily="{DynamicResource HYRunYuan65S}" 
+               FontSize="24" Margin="10" HorizontalAlignment="Center"/>
+    <TextBlock Text="{Binding Version}" FontFamily="{DynamicResource HYRunYuan35S}" 
+               FontSize="20" Margin="10" HorizontalAlignment="Center"/>
     <Button Content="切换主题" Command="{Binding ChangeThemeCommand}" 
-            Margin="10" Padding="5" HorizontalAlignment="Center"/>
+            Margin="10" Padding="5" HorizontalAlignment="Center" FontFamily="{DynamicResource HYRunYuan35S}"/>
     </StackPanel>
     
 </Window>

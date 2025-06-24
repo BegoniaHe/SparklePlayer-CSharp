@@ -8,6 +8,10 @@ namespace SparklePlayer.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    public MainWindowViewModel()
+    {
+        // 默认构造函数
+    }
     /// <summary>
     /// 窗口最小大小: 720p 分辨率
     /// </summary>
@@ -34,7 +38,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public double MainWindowWidthDefault => Math.Max(MainWindowWidthMin, _screenWidth * 0.8);
     public double MainWindowHeightDefault => Math.Max(MainWindowHeightMin, _screenHeight * 0.8);
-    public string Greeting { get; } = "Welcome to Sparkle Player!";
+    public string Greeting { get; } = "Welcome to Sparkle Player!"; // 欢迎语
+    public string Version { get; } = "1.0.0"; // 这里可以动态获取版本号
 
     /// <summary>
     /// 切换主题

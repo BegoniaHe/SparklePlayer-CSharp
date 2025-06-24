@@ -1,33 +1,35 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- Add Resources Here -->
+    <FontFamily x:Key="HYRunYuan35S">avares://SparklePlayer/Assets/Fonts/HYRunYuan-35S.ttf#HYRunYuan 35S</FontFamily>
+    <FontFamily x:Key="HYRunYuan45S">avares://SparklePlayer/Assets/Fonts/HYRunYuan-45S.ttf#HYRunYuan 45S</FontFamily>
+    <FontFamily x:Key="HYRunYuan55S">avares://SparklePlayer/Assets/Fonts/HYRunYuan-55S.ttf#HYRunYuan 55S</FontFamily>
+    <FontFamily x:Key="HYRunYuan65S">avares://SparklePlayer/Assets/Fonts/HYRunYuan-65S.ttf#HYRunYuan 65S</FontFamily>
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
-            <SolidColorBrush x:Key="BgBody" Color="#FFFFFFFF" />
-            <SolidColorBrush x:Key="BgHeader" Color="#FFEEEEEE" />
-            <SolidColorBrush x:Key="TextPrimary" Color="#FF000000" />
-            <SolidColorBrush x:Key="Primary" Color="#FF2196F3" />
-            <SolidColorBrush x:Key="Accent" Color="#FF64B5F6" />
-            <SolidColorBrush x:Key="Border" Color="#FFE0E0E0" />
-            <SolidColorBrush x:Key="TextSecondary" Color="#99000000" />
-            <SolidColorBrush x:Key="Disabled" Color="#FFF5F5F5" />
-            <SolidColorBrush x:Key="Error" Color="#FFB00020" />
-            <SolidColorBrush x:Key="Success" Color="#FF388E3C" />
-            <SolidColorBrush x:Key="Warning" Color="#FFFBC02D" />
+            <SolidColorBrush x:Key="BgBody" Color="#FFFDFDFD" />
+            <SolidColorBrush x:Key="BgHeader" Color="#FFF5F7FA" />
+            <SolidColorBrush x:Key="TextPrimary" Color="#FF222222" />
+            <SolidColorBrush x:Key="Primary" Color="#FF4A90E2" />
+            <SolidColorBrush x:Key="Accent" Color="#FFB0C4DE" />
+            <SolidColorBrush x:Key="Border" Color="#FFE5E7EB" />
+            <SolidColorBrush x:Key="TextSecondary" Color="#664A4A4A" />
+            <SolidColorBrush x:Key="Disabled" Color="#FFF0F1F3" />
+            <SolidColorBrush x:Key="Error" Color="#FFE57373" />
+            <SolidColorBrush x:Key="Success" Color="#FF81C784" />
+            <SolidColorBrush x:Key="Warning" Color="#FFFFF9C4" />
         </ResourceDictionary>
-
         <ResourceDictionary x:Key="Dark">
-            <SolidColorBrush x:Key="BgBody" Color="#FF121212" />
-            <SolidColorBrush x:Key="BgHeader" Color="#FF1E1E1E" />
-            <SolidColorBrush x:Key="TextPrimary" Color="#FFFFFFFF" />
-            <SolidColorBrush x:Key="Primary" Color="#FF42A5F5" />
-            <SolidColorBrush x:Key="Accent" Color="#FF90CAF9" />
+            <SolidColorBrush x:Key="BgBody" Color="#FF181A1B" />
+            <SolidColorBrush x:Key="BgHeader" Color="#FF23272A" />
+            <SolidColorBrush x:Key="TextPrimary" Color="#FFF5F7FA" />
+            <SolidColorBrush x:Key="Primary" Color="#FF6CA0DC" />
+            <SolidColorBrush x:Key="Accent" Color="#FFB0BEC5" />
             <SolidColorBrush x:Key="Border" Color="#FF23272A" />
-            <SolidColorBrush x:Key="TextSecondary" Color="#99FFFFFF" />
+            <SolidColorBrush x:Key="TextSecondary" Color="#66FFFFFF" />
             <SolidColorBrush x:Key="Disabled" Color="#FF23272A" />
-            <SolidColorBrush x:Key="Error" Color="#FFCF6679" />
-            <SolidColorBrush x:Key="Success" Color="#FF66BB6A" />
-            <SolidColorBrush x:Key="Warning" Color="#FFFFEE58" />
+            <SolidColorBrush x:Key="Error" Color="#FFEF9A9A" />
+            <SolidColorBrush x:Key="Success" Color="#FFA5D6A7" />
+            <SolidColorBrush x:Key="Warning" Color="#FFFFF59D" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>
