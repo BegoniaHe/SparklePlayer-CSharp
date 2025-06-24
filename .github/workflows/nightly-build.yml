@@ -126,7 +126,7 @@ jobs:
           (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
 
       - name: Build and publish
-        run: dotnet publish SparklePlayer/SparklePlayer.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }} -p:PublishSingleFile=true -p:PublishTrimmed=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -p:PublishReadyToRun=false
+        run: dotnet publish SparklePlayer/SparklePlayer.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }} -p:PublishSingleFile=true -p:PublishTrimmed=false -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -p:PublishReadyToRun=false
         continue-on-error: true
         id: build-step
         if: |
@@ -136,25 +136,33 @@ jobs:
           (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
           (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
 
-      - name: Clean up extra files and keep only executable
-        if: steps.build-step.outcome == 'success'
+      - name: Clean up extra files and keep only executable (Windows)
+        if: steps.build-step.outcome == 'success' && matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          cd ./publish/${{ matrix.runtime }}
+          Write-Host "Files before cleanup:"
+          Get-ChildItem
+          
+          # Windows: 保留 .exe 文件，删除其他所有文件
+          Get-ChildItem -File | Where-Object { $_.Extension -ne ".exe" } | Remove-Item -Force
+          Write-Host "Kept only .exe files"
+          
+          Write-Host "Files after cleanup:"
+          Get-ChildItem
+
+      - name: Clean up extra files and keep only executable (Linux/macOS)
+        if: steps.build-step.outcome == 'success' && matrix.platform != 'windows'
         run: |
           cd ./publish/${{ matrix.runtime }}
           echo "Files before cleanup:"
           ls -la
           
-          # 根据平台保留对应的可执行文件，删除其他所有文件
-          if [ "${{ matrix.platform }}" = "windows" ]; then
-            # Windows: 保留 .exe 文件
-            find . -type f ! -name "*.exe" -delete
-            echo "Kept only .exe files"
-          else
-            # Linux/macOS: 保留无扩展名的可执行文件 SparklePlayer
-            find . -type f ! -name "SparklePlayer" -delete
-            # 确保可执行权限
-            chmod +x SparklePlayer 2>/dev/null || true
-            echo "Kept only SparklePlayer executable"
-          fi
+          # Linux/macOS: 保留无扩展名的可执行文件 SparklePlayer
+          find . -type f ! -name "SparklePlayer" -delete
+          # 确保可执行权限
+          chmod +x SparklePlayer 2>/dev/null || true
+          echo "Kept only SparklePlayer executable"
           
           echo "Files after cleanup:"
           ls -la
