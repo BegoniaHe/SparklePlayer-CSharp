@@ -8,7 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd71272c-4077-45e4-894d-602bef93e673" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/App.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/App.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SparklePlayer/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/ViewModels/MainWindowViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +56,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.smartKeys_rider&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -94,6 +96,10 @@
       <workItem from="1750719995542" duration="128000" />
       <workItem from="1750720160509" duration="31000" />
       <workItem from="1750720391082" duration="7011000" />
+      <workItem from="1750747659026" duration="456000" />
+      <workItem from="1750748118921" duration="236000" />
+      <workItem from="1750748433370" duration="180000" />
+      <workItem from="1750748628766" duration="307000" />
     </task>
     <servers />
   </component>
@@ -121,5 +127,9 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

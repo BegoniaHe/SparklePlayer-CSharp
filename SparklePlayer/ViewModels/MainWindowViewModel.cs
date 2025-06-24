@@ -1,5 +1,8 @@
 ﻿using System;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Styling;
+using CommunityToolkit.Mvvm.Input;
 
 namespace SparklePlayer.ViewModels;
 
@@ -18,6 +21,8 @@ public partial class MainWindowViewModel : ViewModelBase
     /// </summary>
     private readonly double _screenWidth;
     private readonly double _screenHeight;
+   
+   
 
     public MainWindowViewModel(Window? mainWindow)
     {
@@ -29,5 +34,19 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public double MainWindowWidthDefault => Math.Max(MainWindowWidthMin, _screenWidth * 0.8);
     public double MainWindowHeightDefault => Math.Max(MainWindowHeightMin, _screenHeight * 0.8);
-    public string Greeting { get; } = "Welcome to Avalonia!";
+    public string Greeting { get; } = "Welcome to Sparkle Player!";
+
+    /// <summary>
+    /// 切换主题
+    /// </summary>
+    [RelayCommand]
+    private void ChangeTheme()
+    {
+        if(Application.Current is null)
+            return;
+        
+        Application.Current.RequestedThemeVariant = Application.Current.RequestedThemeVariant == ThemeVariant.Light
+            ? ThemeVariant.Dark
+            : ThemeVariant.Light;
+    }
 }

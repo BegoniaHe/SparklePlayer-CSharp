@@ -33,6 +33,10 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+    <TextBlock Text="{Binding Greeting}"/>
+    <Button Content="切换主题" Command="{Binding ChangeThemeCommand}" 
+            Margin="10" Padding="5" HorizontalAlignment="Center"/>
+    </StackPanel>
+    
 </Window>
