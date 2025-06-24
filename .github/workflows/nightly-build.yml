@@ -126,7 +126,7 @@ jobs:
           (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
 
       - name: Build and publish
-        run: dotnet publish SparklePlayer/SparklePlayer.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }} -p:PublishSingleFile=true -p:PublishTrimmed=false
+        run: dotnet publish SparklePlayer/SparklePlayer.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }} -p:PublishSingleFile=true -p:PublishTrimmed=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -p:PublishReadyToRun=false
         continue-on-error: true
         id: build-step
         if: |
@@ -135,6 +135,29 @@ jobs:
           (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
           (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
           (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
+
+      - name: Clean up extra files and keep only executable
+        if: steps.build-step.outcome == 'success'
+        run: |
+          cd ./publish/${{ matrix.runtime }}
+          echo "Files before cleanup:"
+          ls -la
+          
+          # 根据平台保留对应的可执行文件，删除其他所有文件
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            # Windows: 保留 .exe 文件
+            find . -type f ! -name "*.exe" -delete
+            echo "Kept only .exe files"
+          else
+            # Linux/macOS: 保留无扩展名的可执行文件 SparklePlayer
+            find . -type f ! -name "SparklePlayer" -delete
+            # 确保可执行权限
+            chmod +x SparklePlayer 2>/dev/null || true
+            echo "Kept only SparklePlayer executable"
+          fi
+          
+          echo "Files after cleanup:"
+          ls -la
 
       - name: Create archive (Linux/macOS)
         if: |
@@ -147,7 +170,8 @@ jobs:
            (inputs.platforms == 'linux-only' && matrix.platform == 'linux'))
         run: |
           cd ./publish/${{ matrix.runtime }}
-          tar -czf ../../${{ matrix.artifact-name }}.tar.gz *
+          # 只打包可执行文件
+          tar -czf ../../${{ matrix.artifact-name }}.tar.gz SparklePlayer
 
       - name: Create archive (Windows)
         if: |
@@ -160,7 +184,8 @@ jobs:
            (inputs.platforms == 'linux-only' && matrix.platform == 'linux'))
         run: |
           cd ./publish/${{ matrix.runtime }}
-          7z a ../../${{ matrix.artifact-name }}.zip *
+          # 只打包exe文件
+          7z a ../../${{ matrix.artifact-name }}.zip SparklePlayer.exe
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -184,13 +209,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整的git历史记录
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
 
-      - name: Generate build info
+      - name: Generate build info and commit changes
         id: build-info
         run: |
           # 生成版本号和标签名
@@ -207,9 +234,65 @@ jobs:
             VERSION_SUFFIX="${BUILD_TIME}"
           fi
           
+          # 获取上一个nightly release的tag (如果存在)
+          LAST_NIGHTLY_TAG=$(git tag -l "nightly-*" | sort -V | tail -1)
+          
+          # 生成commit变更信息
+          if [ -n "$LAST_NIGHTLY_TAG" ]; then
+            echo "Getting changes since last nightly release: $LAST_NIGHTLY_TAG"
+            # 获取自上一个nightly版本以来的commits
+            COMMIT_RANGE="${LAST_NIGHTLY_TAG}..HEAD"
+          else
+            echo "No previous nightly release found, getting recent commits"
+            # 如果没有之前的nightly版本，获取最近10个commits
+            COMMIT_RANGE="HEAD~10..HEAD"
+          fi
+          
+          # 生成commit信息，支持截断长消息
+          echo "## 📝 更新内容" > commit_changes.md
+          echo "" >> commit_changes.md
+          
+          if git rev-list --count $COMMIT_RANGE > /dev/null 2>&1; then
+            COMMIT_COUNT=$(git rev-list --count $COMMIT_RANGE)
+            if [ "$COMMIT_COUNT" -gt 0 ]; then
+              echo "自上次发布以来共有 **${COMMIT_COUNT}** 个提交：" >> commit_changes.md
+              echo "" >> commit_changes.md
+              
+              # 使用git log生成格式化的commit信息，支持长消息截断
+              git log $COMMIT_RANGE --pretty=format:"%s|%h|%H|%an|%ar" --reverse | while IFS='|' read -r subject hash full_hash author date; do
+                # 截断超过20字符的提交消息
+                if [ ${#subject} -gt 20 ]; then
+                  truncated_subject="${subject:0:20}..."
+                else
+                  truncated_subject="$subject"
+                fi
+                echo "- **${truncated_subject}** ([${hash}](https://github.com/${{ github.repository }}/commit/${full_hash}))" >> commit_changes.md
+                echo "  *${author} - ${date}*" >> commit_changes.md
+              done
+              
+              echo "" >> commit_changes.md
+              echo "" >> commit_changes.md
+              echo "### 🔗 完整变更对比" >> commit_changes.md
+              echo "[查看所有变更](https://github.com/${{ github.repository }}/compare/${LAST_NIGHTLY_TAG}...${TAG_NAME})" >> commit_changes.md
+            else
+              echo "没有新的提交更新。" >> commit_changes.md
+            fi
+          else
+            echo "无法获取提交历史，显示当前提交信息：" >> commit_changes.md
+            echo "" >> commit_changes.md
+            # 获取当前commit信息并截断
+            CURRENT_SUBJECT=$(git log -1 --pretty=format:'%s')
+            if [ ${#CURRENT_SUBJECT} -gt 20 ]; then
+              CURRENT_SUBJECT="${CURRENT_SUBJECT:0:20}..."
+            fi
+            echo "- **${CURRENT_SUBJECT}** ([$(git log -1 --pretty=format:'%h')](https://github.com/${{ github.repository }}/commit/${{ github.sha }}))" >> commit_changes.md
+            echo "  *$(git log -1 --pretty=format:'%an - %ar')*" >> commit_changes.md
+          fi
+          
           echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
           echo "release_name=${RELEASE_NAME}" >> $GITHUB_OUTPUT
           echo "version_suffix=${VERSION_SUFFIX}" >> $GITHUB_OUTPUT
+          echo "last_nightly_tag=${LAST_NIGHTLY_TAG}" >> $GITHUB_OUTPUT
 
       - name: Create release
         id: create_release
@@ -223,383 +306,18 @@ jobs:
           
           **版本:** ${{ steps.build-info.outputs.version_suffix }}
           **构建时间:** ${CURRENT_TIME}
-          **Commit:** ${{ github.sha }}
+          **Commit:** [\`${{ github.sha }}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
           **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
+          
+          $(cat commit_changes.md)
           
           ### 📦 下载链接
           下载链接将根据实际构建成功的平台显示
           
           ### ⚠️ 注意事项
-          name: Nightly Build
-          
-          # 添加权限配置
-          permissions:
-            contents: write
-            actions: read
-            pull-requests: read
-          
-          on:
-            schedule:
-              # 每天凌晨 2:00 UTC (北京时间上午 10:00) 运行
-              - cron: '0 2 * * *'
-            workflow_dispatch:  # 允许手动触发
-              inputs:
-                version_suffix:
-                  description: '版本后缀 (留空则使用时间戳)'
-                  required: false
-                  default: ''
-                  type: string
-                platforms:
-                  description: '要构建的平台'
-                  required: false
-                  default: 'all'
-                  type: choice
-                  options:
-                  - all
-                  - windows-only
-                  - macos-only
-                  - linux-only
-                cleanup_prereleases:
-                  description: '是否清理现有的预发布版本'
-                  required: false
-                  default: true
-                  type: boolean
-          
-          jobs:
-            cleanup-prereleases:
-              runs-on: ubuntu-latest
-              if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.cleanup_prereleases) }}
-              steps:
-                - name: Checkout repository
-                  uses: actions/checkout@v4
-          
-                - name: Delete existing prereleases
-                  uses: actions/github-script@v7
-                  with:
-                    github-token: ${{ secrets.GITHUB_TOKEN }}
-                    script: |
-                      const { data: releases } = await github.rest.repos.listReleases({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                      });
-                      
-                      const prereleases = releases.filter(release => release.prerelease);
-                      
-                      for (const release of prereleases) {
-                        console.log(`Deleting prerelease: ${release.tag_name}`);
-                        await github.rest.repos.deleteRelease({
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          release_id: release.id,
-                        });
-                        
-                        // 同时删除对应的 tag
-                        try {
-                          await github.rest.git.deleteRef({
-                            owner: context.repo.owner,
-                            repo: context.repo.repo,
-                            ref: `tags/${release.tag_name}`,
-                          });
-                          console.log(`Deleted tag: ${release.tag_name}`);
-                        } catch (error) {
-                          console.log(`Tag ${release.tag_name} might not exist: ${error.message}`);
-                        }
-                      }
-          
-            build:
-              needs: cleanup-prereleases
-              if: always() && (needs.cleanup-prereleases.result == 'success' || needs.cleanup-prereleases.result == 'skipped')
-              strategy:
-                matrix:
-                  include:
-                    - os: ubuntu-latest
-                      runtime: linux-x64
-                      artifact-name: SparklePlayer-linux-x64
-                      platform: linux
-                    - os: windows-latest
-                      runtime: win-x64
-                      artifact-name: SparklePlayer-windows-x64
-                      platform: windows
-                    - os: macos-latest
-                      runtime: osx-arm64
-                      artifact-name: SparklePlayer-macos-arm64
-                      platform: macos
-          
-              runs-on: ${{ matrix.os }}
-          
-              steps:
-                - name: Checkout repository
-                  uses: actions/checkout@v4
-                  if: |
-                    github.event_name != 'workflow_dispatch' ||
-                    inputs.platforms == 'all' ||
-                    (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
-                    (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
-                    (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
-          
-                - name: Setup .NET
-                  uses: actions/setup-dotnet@v4
-                  with:
-                    dotnet-version: '9.0.x'
-                  if: |
-                    github.event_name != 'workflow_dispatch' ||
-                    inputs.platforms == 'all' ||
-                    (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
-                    (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
-                    (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
-          
-                - name: Restore dependencies
-                  run: dotnet restore SparklePlayer/SparklePlayer.csproj
-                  if: |
-                    github.event_name != 'workflow_dispatch' ||
-                    inputs.platforms == 'all' ||
-                    (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
-                    (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
-                    (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
-          
-                - name: Build and publish
-                  run: dotnet publish SparklePlayer/SparklePlayer.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }} -p:PublishSingleFile=true -p:PublishTrimmed=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-                  continue-on-error: true
-                  id: build-step
-                  if: |
-                    github.event_name != 'workflow_dispatch' ||
-                    inputs.platforms == 'all' ||
-                    (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
-                    (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
-                    (inputs.platforms == 'linux-only' && matrix.platform == 'linux')
-          
-                - name: Create archive (Linux/macOS)
-                  if: |
-                    steps.build-step.outcome == 'success' &&
-                    matrix.os != 'windows-latest' &&
-                    (github.event_name != 'workflow_dispatch' ||
-                     inputs.platforms == 'all' ||
-                     (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
-                     (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
-                     (inputs.platforms == 'linux-only' && matrix.platform == 'linux'))
-                  run: |
-                    cd ./publish/${{ matrix.runtime }}
-                    # 只打包可执行文件，忽略其他文件
-                    if [ "${{ matrix.platform }}" = "linux" ]; then
-                      tar -czf ../../${{ matrix.artifact-name }}.tar.gz SparklePlayer
-                    else
-                      tar -czf ../../${{ matrix.artifact-name }}.tar.gz SparklePlayer
-                    fi
-          
-                - name: Create archive (Windows)
-                  if: |
-                    steps.build-step.outcome == 'success' &&
-                    matrix.os == 'windows-latest' &&
-                    (github.event_name != 'workflow_dispatch' ||
-                     inputs.platforms == 'all' ||
-                     (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
-                     (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
-                     (inputs.platforms == 'linux-only' && matrix.platform == 'linux'))
-                  run: |
-                    cd ./publish/${{ matrix.runtime }}
-                    # 只打包exe文件，忽略其他文件
-                    7z a ../../${{ matrix.artifact-name }}.zip SparklePlayer.exe
-          
-                - name: Upload build artifacts
-                  uses: actions/upload-artifact@v4
-                  with:
-                    name: ${{ matrix.artifact-name }}
-                    path: |
-                      ${{ matrix.artifact-name }}.tar.gz
-                      ${{ matrix.artifact-name }}.zip
-                  if: |
-                    steps.build-step.outcome == 'success' &&
-                    (github.event_name != 'workflow_dispatch' ||
-                    inputs.platforms == 'all' ||
-                    (inputs.platforms == 'windows-only' && matrix.platform == 'windows') ||
-                    (inputs.platforms == 'macos-only' && matrix.platform == 'macos') ||
-                    (inputs.platforms == 'linux-only' && matrix.platform == 'linux'))
-          
-            create-release:
-              needs: build
-              if: always() && (needs.build.result == 'success' || needs.build.result == 'failure')
-              runs-on: ubuntu-latest
-              steps:
-                - name: Checkout repository
-                  uses: actions/checkout@v4
-                  with:
-                    fetch-depth: 0  # 获取完整的git历史记录
-          
-                - name: Download all artifacts
-                  uses: actions/download-artifact@v4
-                  with:
-                    path: ./artifacts
-          
-                - name: Generate build info and commit changes
-                  id: build-info
-                  run: |
-                    # 生成版本号和标签名
-                    if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.version_suffix }}" ]; then
-                      # 手动触发且有自定义后缀
-                      VERSION_SUFFIX="${{ inputs.version_suffix }}"
-                      TAG_NAME="nightly-${VERSION_SUFFIX}"
-                      RELEASE_NAME="Nightly Build ${VERSION_SUFFIX}"
-                    else
-                      # 自动触发或手动触发无自定义后缀，使用时间戳
-                      BUILD_TIME=$(date -u +"%Y.%m.%d.%H%M")
-                      TAG_NAME="nightly-${BUILD_TIME}"
-                      RELEASE_NAME="Nightly Build ${BUILD_TIME}"
-                      VERSION_SUFFIX="${BUILD_TIME}"
-                    fi
-                    
-                    # 获取上一个nightly release的tag (如果存在)
-                    LAST_NIGHTLY_TAG=$(git tag -l "nightly-*" | sort -V | tail -1)
-                    
-                    # 生成commit变更信息
-                    if [ -n "$LAST_NIGHTLY_TAG" ]; then
-                      echo "Getting changes since last nightly release: $LAST_NIGHTLY_TAG"
-                      # 获取自上一个nightly版本以来的commits
-                      COMMIT_RANGE="${LAST_NIGHTLY_TAG}..HEAD"
-                    else
-                      echo "No previous nightly release found, getting recent commits"
-                      # 如果没有之前的nightly版本，获取最近10个commits
-                      COMMIT_RANGE="HEAD~10..HEAD"
-                    fi
-                    
-                    # 生成commit信息
-                    echo "## 📝 更新内容" > commit_changes.md
-                    echo "" >> commit_changes.md
-                    
-                    if git rev-list --count $COMMIT_RANGE > /dev/null 2>&1; then
-                      COMMIT_COUNT=$(git rev-list --count $COMMIT_RANGE)
-                      if [ "$COMMIT_COUNT" -gt 0 ]; then
-                        echo "自上次发布以来共有 **${COMMIT_COUNT}** 个提交：" >> commit_changes.md
-                        echo "" >> commit_changes.md
-                        
-                        # 使用git log生成格式化的commit信息
-                        git log $COMMIT_RANGE --pretty=format:"- **%s** ([%h](https://github.com/${{ github.repository }}/commit/%H))%n  *%an - %ar*" --reverse >> commit_changes.md
-                        
-                        echo "" >> commit_changes.md
-                        echo "" >> commit_changes.md
-                        echo "### 🔗 完整变更对比" >> commit_changes.md
-                        echo "[查看所有变更](https://github.com/${{ github.repository }}/compare/${LAST_NIGHTLY_TAG}...${TAG_NAME})" >> commit_changes.md
-                      else
-                        echo "没有新的提交更新。" >> commit_changes.md
-                      fi
-                    else
-                      echo "无法获取提交历史，显示当前提交信息：" >> commit_changes.md
-                      echo "" >> commit_changes.md
-                      echo "- **$(git log -1 --pretty=format:'%s')** ([$(git log -1 --pretty=format:'%h')](https://github.com/${{ github.repository }}/commit/${{ github.sha }}))" >> commit_changes.md
-                      echo "  *$(git log -1 --pretty=format:'%an - %ar')*" >> commit_changes.md
-                    fi
-                    
-                    echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
-                    echo "release_name=${RELEASE_NAME}" >> $GITHUB_OUTPUT
-                    echo "version_suffix=${VERSION_SUFFIX}" >> $GITHUB_OUTPUT
-                    echo "last_nightly_tag=${LAST_NIGHTLY_TAG}" >> $GITHUB_OUTPUT
-          
-                - name: Create release
-                  id: create_release
-                  run: |
-                    # 获取当前时间
-                    CURRENT_TIME=$(date -u)
-                    
-                    # 创建release说明
-                    cat > release_notes.md << EOF
-                    ## 🌟 SparklePlayer Nightly Build
-                    
-                    **版本:** ${{ steps.build-info.outputs.version_suffix }}
-                    **构建时间:** ${CURRENT_TIME}
-                    **Commit:** [\`${{ github.sha }}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
-                    **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
-                    
-                    $(cat commit_changes.md)
-                    
-                    ### 📦 下载链接
-                    下载链接将根据实际构建成功的平台显示
-                    
-                    ### ⚠️ 注意事项
-                    - 这是自动构建的预览版本，仅用于测试和预览新功能
-                    - 不建议在生产环境中使用
-                    - 所有平台的构建都是单文件可执行程序，无需额外的DLL或库文件
-                    
-                    ### 🔄 自动更新
-                    此版本会每24小时自动更新一次。
-                    EOF
-                    
-                    # 使用GitHub CLI创建release
-                    gh release create ${{ steps.build-info.outputs.tag_name }} \
-                      --title "${{ steps.build-info.outputs.release_name }}" \
-                      --notes-file release_notes.md \
-                      --prerelease
-                  env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-                - name: Check available artifacts and upload
-                  run: |
-                    echo "Checking for available artifacts..."
-                    ls -la ./artifacts/ 2>/dev/null || echo "No artifacts directory found"
-                    
-                    # 检查并上传构建产物
-                    uploaded_count=0
-                    
-                    # 上传 Linux x64 构建产物 (如果存在)
-                    if [ -f "./artifacts/SparklePlayer-linux-x64/SparklePlayer-linux-x64.tar.gz" ]; then
-                      echo "✅ Uploading Linux x64 build..."
-                      gh release upload ${{ steps.build-info.outputs.tag_name }} \
-                        "./artifacts/SparklePlayer-linux-x64/SparklePlayer-linux-x64.tar.gz" \
-                        --clobber || echo "Failed to upload Linux build"
-                      uploaded_count=$((uploaded_count + 1))
-                    else
-                      echo "❌ Linux x64 build not available"
-                    fi
-                    
-                    # 上传 Windows x64 构建产物 (如果存在)
-                    if [ -f "./artifacts/SparklePlayer-windows-x64/SparklePlayer-windows-x64.zip" ]; then
-                      echo "✅ Uploading Windows x64 build..."
-                      gh release upload ${{ steps.build-info.outputs.tag_name }} \
-                        "./artifacts/SparklePlayer-windows-x64/SparklePlayer-windows-x64.zip" \
-                        --clobber || echo "Failed to upload Windows build"
-                      uploaded_count=$((uploaded_count + 1))
-                    else
-                      echo "❌ Windows x64 build not available"
-                    fi
-                    
-                    # 上传 macOS ARM64 构建产物 (如果存在)
-                    if [ -f "./artifacts/SparklePlayer-macos-arm64/SparklePlayer-macos-arm64.tar.gz" ]; then
-                      echo "✅ Uploading macOS ARM64 build..."
-                      gh release upload ${{ steps.build-info.outputs.tag_name }} \
-                        "./artifacts/SparklePlayer-macos-arm64/SparklePlayer-macos-arm64.tar.gz" \
-                        --clobber || echo "Failed to upload macOS build"
-                      uploaded_count=$((uploaded_count + 1))
-                    else
-                      echo "❌ macOS ARM64 build not available"
-                    fi
-                    
-                    echo "Successfully uploaded $uploaded_count build(s)"
-                    
-                    # 如果没有任何构建成功，更新release说明
-                    if [ $uploaded_count -eq 0 ]; then
-                      echo "⚠️ No builds were successful, updating release notes..."
-                      CURRENT_TIME=$(date -u)
-                      cat > failed_release_notes.md << EOF
-                    ## ❌ SparklePlayer Nightly Build - All Builds Failed
-                    
-                    **版本:** ${{ steps.build-info.outputs.version_suffix }}
-                    **构建时间:** ${CURRENT_TIME}
-                    **Commit:** [\`${{ github.sha }}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
-                    **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
-                    
-                    $(cat commit_changes.md)
-                    
-                    ### ⚠️ 构建状态
-                    所有平台的构建都失败了，请检查构建日志获取详细信息。
-                    
-                    ### 🔧 故障排除
-                    请查看GitHub Actions日志了解构建失败的原因。
-                    EOF
-                      
-                      gh release edit ${{ steps.build-info.outputs.tag_name }} \
-                        --notes-file failed_release_notes.md || echo "Failed to update release notes"
-                    fi
-                  env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          这是自动构建的预览版本，仅用于测试和预览新功能。
-          不建议在生产环境中使用。
+          - 这是自动构建的预览版本，仅用于测试和预览新功能
+          - 不建议在生产环境中使用
+          - 所有平台的构建都是单文件可执行程序，无需额外的DLL或库文件
           
           ### 🔄 自动更新
           此版本会每24小时自动更新一次。
@@ -665,8 +383,10 @@ jobs:
           
           **版本:** ${{ steps.build-info.outputs.version_suffix }}
           **构建时间:** ${CURRENT_TIME}
-          **Commit:** ${{ github.sha }}
+          **Commit:** [\`${{ github.sha }}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
           **触发方式:** ${{ github.event_name == 'schedule' && '自动构建' || '手动触发' }}
+          
+          $(cat commit_changes.md)
           
           ### ⚠️ 构建状态
           所有平台的构建都失败了，请检查构建日志获取详细信息。

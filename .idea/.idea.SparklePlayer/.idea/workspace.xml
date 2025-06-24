@@ -7,9 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cd71272c-4077-45e4-894d-602bef93e673" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="cd71272c-4077-45e4-894d-602bef93e673" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -98,7 +96,7 @@
       <workItem from="1750748118921" duration="236000" />
       <workItem from="1750748433370" duration="180000" />
       <workItem from="1750748628766" duration="1000000" />
-      <workItem from="1750762808533" duration="739000" />
+      <workItem from="1750762808533" duration="1361000" />
     </task>
     <servers />
   </component>
