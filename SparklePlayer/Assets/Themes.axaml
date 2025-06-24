@@ -6,17 +6,28 @@
             <SolidColorBrush x:Key="BgBody" Color="#FFFFFFFF" />
             <SolidColorBrush x:Key="BgHeader" Color="#FFEEEEEE" />
             <SolidColorBrush x:Key="TextPrimary" Color="#FF000000" />
+            <SolidColorBrush x:Key="Primary" Color="#FF2196F3" />
+            <SolidColorBrush x:Key="Accent" Color="#FF64B5F6" />
+            <SolidColorBrush x:Key="Border" Color="#FFE0E0E0" />
+            <SolidColorBrush x:Key="TextSecondary" Color="#99000000" />
+            <SolidColorBrush x:Key="Disabled" Color="#FFF5F5F5" />
+            <SolidColorBrush x:Key="Error" Color="#FFB00020" />
+            <SolidColorBrush x:Key="Success" Color="#FF388E3C" />
+            <SolidColorBrush x:Key="Warning" Color="#FFFBC02D" />
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Dark">
             <SolidColorBrush x:Key="BgBody" Color="#FF121212" />
             <SolidColorBrush x:Key="BgHeader" Color="#FF1E1E1E" />
             <SolidColorBrush x:Key="TextPrimary" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="Primary" Color="#FF42A5F5" />
+            <SolidColorBrush x:Key="Accent" Color="#FF90CAF9" />
+            <SolidColorBrush x:Key="Border" Color="#FF23272A" />
+            <SolidColorBrush x:Key="TextSecondary" Color="#99FFFFFF" />
+            <SolidColorBrush x:Key="Disabled" Color="#FF23272A" />
+            <SolidColorBrush x:Key="Error" Color="#FFCF6679" />
+            <SolidColorBrush x:Key="Success" Color="#FF66BB6A" />
+            <SolidColorBrush x:Key="Warning" Color="#FFFFEE58" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
-
-    <!-- Additional theme resources for custom styling -->
-    <SolidColorBrush x:Key="AcrylicBlurBgBody" Color="#FF121212" />
-    <SolidColorBrush x:Key="AcrylicBlurBgHeader" Color="#FF1E1E1E" />
-    <SolidColorBrush x:Key="AcrylicBlurTextPrimary" Color="#FFFFFFFF" />
 </ResourceDictionary>
