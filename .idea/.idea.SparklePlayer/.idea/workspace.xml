@@ -9,8 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cd71272c-4077-45e4-894d-602bef93e673" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/ViewModels/MainWindowViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +97,8 @@
       <workItem from="1750747659026" duration="456000" />
       <workItem from="1750748118921" duration="236000" />
       <workItem from="1750748433370" duration="180000" />
-      <workItem from="1750748628766" duration="307000" />
+      <workItem from="1750748628766" duration="1000000" />
+      <workItem from="1750762808533" duration="739000" />
     </task>
     <servers />
   </component>
