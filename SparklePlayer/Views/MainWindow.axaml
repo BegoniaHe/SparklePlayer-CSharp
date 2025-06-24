@@ -14,8 +14,18 @@
         ExtendClientAreaChromeHints="PreferSystemChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
         SystemDecorations="Full"
-        ><!-- 这个标题不会显示在窗口上，
+        
+        Width="{Binding MainWindowWidthDefault}"
+        Height="{Binding MainWindowHeightDefault}"
+        
+        MinWidth="{Binding MainWindowWidthMin}"
+        MinHeight="{Binding MainWindowHeightMin}"
+        >
+    <!-- 这个标题不会显示在窗口上，
              但它会在任务栏和 Alt+Tab 中显示。 -->
+    <!-- mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" 
+         这两个属性是为了在设计时提供一个预览窗口的大小，
+         但它们不会影响运行时的窗口大小。 -->
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
