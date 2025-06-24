@@ -17,7 +17,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!-- 引入主题资源 -->
-                <ResourceInclude Source="Assets/Themes.axaml"/>
+                <ResourceInclude Source="Styles/Themes.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
