@@ -1,0 +1,23 @@
+<Styles xmlns="https://github.com/avaloniaui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="BgBody" Color="#FF181A1B" />
+                    <SolidColorBrush x:Key="BgHeader" Color="#FF23272A" />
+                    <SolidColorBrush x:Key="TextPrimary" Color="#FFF5F7FA" />
+                    <SolidColorBrush x:Key="Primary" Color="#FF6CA0DC" />
+                    <SolidColorBrush x:Key="Accent" Color="#FFB0BEC5" />
+                    <SolidColorBrush x:Key="Border" Color="#FF23272A" />
+                    <SolidColorBrush x:Key="TextSecondary" Color="#66FFFFFF" />
+                    <SolidColorBrush x:Key="Disabled" Color="#FF23272A" />
+                    <SolidColorBrush x:Key="Error" Color="#FFEF9A9A" />
+                    <SolidColorBrush x:Key="Success" Color="#FFA5D6A7" />
+                    <SolidColorBrush x:Key="Warning" Color="#FFFFF59D" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+</Styles>

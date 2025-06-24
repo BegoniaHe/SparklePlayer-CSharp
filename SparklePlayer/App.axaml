@@ -11,14 +11,7 @@
   
     <Application.Styles>
         <FluentTheme />
+        <!-- 引入主题样式 -->
+        <StyleInclude Source="Styles/Themes.axaml"/>
     </Application.Styles>
-             
-    <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!-- 引入主题资源 -->
-                <ResourceInclude Source="Styles/Themes.axaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Application.Resources>
 </Application>

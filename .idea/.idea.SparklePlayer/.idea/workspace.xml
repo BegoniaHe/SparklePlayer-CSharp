@@ -8,10 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd71272c-4077-45e4-894d-602bef93e673" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/Assets/Themes.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Assets/Themes.axaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/SparklePlayer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/SparklePlayer.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/ViewModels/MainWindowViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SparklePlayer/Styles/Dark.axaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SparklePlayer/Styles/Light.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SparklePlayer/Styles/Themes.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Styles/Themes.axaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,16 +24,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e777cf0c0c7c4c38af1ea95eef7a413c104400/24/3418aad0/IScreenImpl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1ad855a3c5b26899e6ce6c55f0fe1a42f2b81c878868b79f7ae064f634f0d9f8/Window.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5a6e8191d9772809dcbefe29295c46eb9e2281ffa8736ba14ff4c49b1c789b/AppBuilderDesktopExtensions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/da6d564bf3d455d995dcc8e9d1734f8481e9266bbea87871554fd8acb9553/AvaloniaLocator.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e777cf0c0c7c4c38af1ea95eef7a413c104400/_4b3ab/IClassicDesktopStyleApplicationLifetime.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f745171ac1d9709943357d18d6d284cbcde3d621ec6b1caff5ece86394b7d9a9/CompiledBindingExtension.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file:///var/folders/3g/4bd103897m3db7g0td8s92vc0000gn/T/SourceGeneratedDocuments/0D15E989F5B1759DA12379C9/Avalonia.Generators/Avalonia.Generators.NameGenerator.AvaloniaNameSourceGenerator/SparklePlayer.Views.MainWindow.g.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9a5cc8ddf36e8c8f422071f068cc8edb16e814991aa851aa131f3fa14425ed/Application.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="Toolset" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -105,6 +98,7 @@
       <workItem from="1750748433370" duration="180000" />
       <workItem from="1750748628766" duration="1000000" />
       <workItem from="1750762808533" duration="8492000" />
+      <workItem from="1750784832045" duration="838000" />
     </task>
     <servers />
   </component>
