@@ -14,7 +14,7 @@
             <div class="title-bar-left">
                 <img src="assets/Icons/appicon.ico" alt="Sparkle Player" class="app-icon">
                 <span class="app-title">Sparkle Player</span>
-                <span class="current-song-title">Hectopascal - 寿美菜子/高田憂希</span>
+                <span class="current-song-title">推荐</span>
             </div>
             <div class="title-bar-center">
                 <div class="search-container">
@@ -47,11 +47,11 @@
                         音乐库
                     </h3>
                     <nav class="nav-menu">
-                        <a href="#" class="nav-item">
+                        <a href="#" class="nav-item active">
                             <img src="assets/Icons/music_album_icon_227414_d.ico" alt="推荐" class="nav-icon">
                             <span>推荐</span>
                         </a>
-                        <a href="#" class="nav-item active">
+                        <a href="#" class="nav-item">
                             <img src="assets/Icons/music_icon_227430_d.ico" alt="歌曲" class="nav-icon">
                             <span>歌曲</span>
                             <span class="count">3218</span>
@@ -86,160 +86,198 @@
             </aside>
 
             <!-- 中央内容区域 -->
-            <main class="content-area">
-                <!-- 横幅区域 -->
-                <section class="hero-banner">
-                    <div class="banner-slide active">
-                        <div class="banner-background">
-                            <img src="assets/banner1.jpg" alt="Featured Music">
-                        </div>
-                        <div class="banner-content">
-                            <h2 class="banner-title">全部音乐</h2>
-                            <p class="banner-subtitle">发现你喜欢的音乐</p>
-                            <button class="play-all-btn">
-                                <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="btn-icon">
-                                全部播放 (共3218首)
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 功能按钮区 -->
-                <section class="action-bar">
-                    <div class="action-buttons">
-                        <button class="action-btn primary">
-                            <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="btn-icon">
-                            播放全部
-                        </button>
-                        <button class="action-btn">
-                            <img src="assets/Icons/playlist_shuffle_icon_227435_d.ico" alt="随机播放" class="btn-icon">
-                            随机播放
-                        </button>
-                    </div>
-                </section>
-
-                <!-- 歌曲列表 -->
-                <section class="song-list">
-                    <div class="list-header">
-                        <div class="header-cell index">#</div>
-                        <div class="header-cell title">歌曲</div>
-                        <div class="header-cell artist">艺术家</div>
-                        <div class="header-cell album">专辑</div>
-                        <div class="header-cell duration">时长</div>
-                        <div class="header-cell actions"></div>
+            <main class="content-area recommendation-page">
+                <!-- 每日推荐区域 -->
+                <section class="daily-recommendations">
+                    <div class="section-header">
+                        <h2 class="section-title-large">每日推荐</h2>
+                        <a href="#" class="view-more-link">查看更多</a>
                     </div>
                     
-                    <div class="song-items">
-                        <!-- 歌曲项目 -->
-                        <div class="song-item playing" data-song="1">
-                            <div class="cell index">
-                                <span class="song-number">1</span>
-                                <button class="play-btn">
-                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
-                                </button>
-                            </div>
-                            <div class="cell title">
+                    <div class="recommendation-grid">
+                        <div class="recommendation-card">
+                            <div class="card-content">
                                 <div class="song-info">
-                                    <div class="song-cover-placeholder"></div>
-                                    <div class="song-details">
-                                        <span class="song-name">ゆめいろハナミズキ</span>
-                                        <div class="song-tags">
-                                            <span class="tag quality">182K</span>
-                                        </div>
-                                    </div>
+                                    <h3 class="song-title">Letting Go</h3>
+                                    <p class="song-artist">刘大壮 - Letting Go</p>
                                 </div>
-                            </div>
-                            <div class="cell artist">東山奈央</div>
-                            <div class="cell album">ゆめいろハナミズキ</div>
-                            <div class="cell duration">03:57</div>
-                            <div class="cell actions">
-                                <button class="action-icon more">
-                                    <span class="more-icon">⋯</span>
+                                <button class="card-play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
                                 </button>
                             </div>
                         </div>
-
-                        <div class="song-item" data-song="2">
-                            <div class="cell index">
-                                <span class="song-number">2</span>
-                                <button class="play-btn">
-                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
-                                </button>
-                            </div>
-                            <div class="cell title">
+                        
+                        <div class="recommendation-card">
+                            <div class="card-content">
                                 <div class="song-info">
-                                    <div class="song-cover-placeholder"></div>
-                                    <div class="song-details">
-                                        <span class="song-name">汎用合成クラスメイト・宇佐見05号</span>
-                                        <div class="song-tags">
-                                            <span class="tag quality">135K</span>
-                                        </div>
-                                    </div>
+                                    <h3 class="song-title">MUIMI</h3>
+                                    <p class="song-artist">ササノマリイ - MUIMI</p>
                                 </div>
-                            </div>
-                            <div class="cell artist">めらみぽっぷ/滑叶櫻</div>
-                            <div class="cell album">東方compilation CD 若葉箱</div>
-                            <div class="cell duration">04:21</div>
-                            <div class="cell actions">
-                                <button class="action-icon more">
-                                    <span class="more-icon">⋯</span>
+                                <button class="card-play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
                                 </button>
                             </div>
                         </div>
-
-                        <div class="song-item" data-song="3">
-                            <div class="cell index">
-                                <span class="song-number">3</span>
-                                <button class="play-btn">
-                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
-                                </button>
-                            </div>
-                            <div class="cell title">
+                        
+                        <div class="recommendation-card">
+                            <div class="card-content">
                                 <div class="song-info">
-                                    <div class="song-cover-placeholder"></div>
-                                    <div class="song-details">
-                                        <span class="song-name">トライアングル</span>
-                                        <div class="song-tags">
-                                            <span class="tag quality">130K</span>
-                                        </div>
-                                    </div>
+                                    <h3 class="song-title">whoa (mind in awe)</h3>
+                                    <p class="song-artist">XXXTENTACION - SKINS</p>
                                 </div>
-                            </div>
-                            <div class="cell artist">藤田麻衣子/美聖子</div>
-                            <div class="cell album">wish～キボウ～</div>
-                            <div class="cell duration">05:12</div>
-                            <div class="cell actions">
-                                <button class="action-icon more">
-                                    <span class="more-icon">⋯</span>
+                                <button class="card-play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
                                 </button>
                             </div>
                         </div>
-
-                        <div class="song-item" data-song="4">
-                            <div class="cell index">
-                                <span class="song-number">4</span>
-                                <button class="play-btn">
+                        
+                        <div class="recommendation-card">
+                            <div class="card-content">
+                                <div class="song-info">
+                                    <h3 class="song-title">We Can Dance in the Dark</h3>
+                                    <p class="song-artist">Nao'ymt - We Can Dance in the Dark</p>
+                                </div>
+                                <button class="card-play-btn">
                                     <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
                                 </button>
                             </div>
-                            <div class="cell title">
+                        </div>
+                        
+                        <div class="recommendation-card">
+                            <div class="card-content">
                                 <div class="song-info">
-                                    <div class="song-cover-placeholder"></div>
-                                    <div class="song-details">
-                                        <span class="song-name">青い空のカミュ full</span>
-                                        <div class="song-tags">
-                                            <span class="tag quality">146K</span>
-                                        </div>
-                                    </div>
+                                    <h3 class="song-title">chAngE</h3>
+                                    <p class="song-artist">miwa - chAngE</p>
+                                </div>
+                                <button class="card-play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-card">
+                            <div class="card-content">
+                                <div class="song-info">
+                                    <h3 class="song-title">10,000 Hours</h3>
+                                    <p class="song-artist">Dan + Shay/Justin Bieber - 10,000 Hours</p>
+                                </div>
+                                <button class="card-play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 最近播放区域 -->
+                <section class="recent-played">
+                    <div class="section-header">
+                        <h2 class="section-title-large">最近播放</h2>
+                    </div>
+                    
+                    <div class="recent-albums-grid">
+                        <div class="album-card">
+                            <div class="album-cover">
+                                <div class="album-placeholder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                                <div class="album-overlay">
+                                    <button class="album-play-btn">
+                                        <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                    </button>
                                 </div>
                             </div>
-                            <div class="cell artist">神月はるか/BLUE DOOR RECORD</div>
-                            <div class="cell album">青い空のカミュ Original Soundtrack</div>
-                            <div class="cell duration">04:33</div>
-                            <div class="cell actions">
-                                <button class="action-icon more">
-                                    <span class="more-icon">⋯</span>
-                                </button>
+                            <div class="album-info">
+                                <h4 class="album-title">hectopascal</h4>
+                                <p class="album-artist">寿美菜子/高田憂希</p>
+                            </div>
+                        </div>
+                        
+                        <div class="album-card">
+                            <div class="album-cover">
+                                <div class="album-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                                <div class="album-overlay">
+                                    <button class="album-play-btn">
+                                        <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="album-info">
+                                <h4 class="album-title">若生命等候</h4>
+                                <p class="album-artist">黄明升</p>
+                            </div>
+                        </div>
+                        
+                        <div class="album-card">
+                            <div class="album-cover">
+                                <div class="album-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                                <div class="album-overlay">
+                                    <button class="album-play-btn">
+                                        <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="album-info">
+                                <h4 class="album-title">莫斯科別為我...</h4>
+                                <p class="album-artist">黄金玉米王</p>
+                            </div>
+                        </div>
+                        
+                        <div class="album-card">
+                            <div class="album-cover">
+                                <div class="album-placeholder" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                                <div class="album-overlay">
+                                    <button class="album-play-btn">
+                                        <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="album-info">
+                                <h4 class="album-title">免我蹉跎苦</h4>
+                                <p class="album-artist">黄明</p>
+                            </div>
+                        </div>
+                        
+                        <div class="album-card">
+                            <div class="album-cover">
+                                <div class="album-placeholder" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+                                <div class="album-overlay">
+                                    <button class="album-play-btn">
+                                        <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="album-info">
+                                <h4 class="album-title">入画江南</h4>
+                                <p class="album-artist">黄明</p>
+                            </div>
+                        </div>
+                        
+                        <div class="album-card">
+                            <div class="album-cover">
+                                <div class="album-placeholder" style="background: linear-gradient(135deg, #96fbc4 0%, #f9f586 100%);"></div>
+                                <div class="album-overlay">
+                                    <button class="album-play-btn">
+                                        <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="album-info">
+                                <h4 class="album-title">吸</h4>
+                                <p class="album-artist">黄明/Tang Duy...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="album-card">
+                            <div class="album-cover">
+                                <div class="album-placeholder" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"></div>
+                                <div class="album-overlay">
+                                    <button class="album-play-btn">
+                                        <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="album-info">
+                                <h4 class="album-title">千本樱</h4>
+                                <p class="album-artist">黑うさ</p>
                             </div>
                         </div>
                     </div>
