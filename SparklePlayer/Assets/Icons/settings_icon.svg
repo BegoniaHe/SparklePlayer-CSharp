@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<svg fill="none" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- 齿轮外圈 -->
+  <circle cx="12" cy="12" r="6" stroke="#292929" stroke-width="2" />
+  <!-- 齿轮内圈 -->
+  <circle cx="12" cy="12" r="2.5" stroke="#292929" stroke-width="2" />
+  <!-- 齿轮齿（8个） -->
+  <g stroke="#292929" stroke-width="2" stroke-linecap="round">
+    <line x1="12" y1="2" x2="12" y2="4"/>
+    <line x1="12" y1="20" x2="12" y2="22"/>
+    <line x1="2" y1="12" x2="4" y2="12"/>
+    <line x1="20" y1="12" x2="22" y2="12"/>
+    <line x1="5.64" y1="5.64" x2="7.06" y2="7.06"/>
+    <line x1="16.94" y1="16.94" x2="18.36" y2="18.36"/>
+    <line x1="5.64" y1="18.36" x2="7.06" y2="16.94"/>
+    <line x1="16.94" y1="7.06" x2="18.36" y2="5.64"/>
+  </g>
+</svg>
+

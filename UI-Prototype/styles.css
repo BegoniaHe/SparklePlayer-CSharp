@@ -1,0 +1,1326 @@
+/* Sparkle Player UI Prototype Styles */
+
+/* 字体定义 */
+@font-face {
+  font-family: 'HYRunYuan-35S';
+  src: url('assets/Fonts/HYRunYuan-35S.ttf') format('truetype');
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HYRunYuan-45S';
+  src: url('assets/Fonts/HYRunYuan-45S.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HYRunYuan-55S';
+  src: url('assets/Fonts/HYRunYuan-55S.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HYRunYuan-65S';
+  src: url('assets/Fonts/HYRunYuan-65S.ttf') format('truetype');
+  font-weight: bold;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Arial-Unicode';
+  src: url('assets/Fonts/Arial-Unicode-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Arial-Unicode';
+  src: url('assets/Fonts/Arial-Unicode-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-display: swap;
+}
+
+:root {
+  /* 深色主题颜色 - 红黄黑配色 */
+  --bg-body-dark: #0A0A0A;
+  --bg-header-dark: #1A1A1A;
+  --text-primary-dark: #FFFFFF;
+  --primary-dark: #FF4444;
+  --accent-dark: #FFAA00;
+  --border-dark: #2A2A2A;
+  --text-secondary-dark: rgba(255, 255, 255, 0.6);
+  --disabled-dark: #1A1A1A;
+  
+  /* 浅色主题颜色 - 红黄黑配色 */
+  --bg-body-light: #FFFFFF;
+  --bg-header-light: #F8F8F8;
+  --text-primary-light: #000000;
+  --primary-light: #DD3333;
+  --accent-light: #FF8800;
+  --border-light: #E0E0E0;
+  --text-secondary-light: rgba(0, 0, 0, 0.6);
+  --disabled-light: #F0F0F0;
+  
+  /* RGB颜色变量用于透明度 */
+  --primary-rgb: 255, 68, 68;
+  --accent-rgb: 255, 170, 0;
+  --bg-header-rgb: 26, 26, 26;
+  
+  /* 当前主题变量 */
+  --bg-body: var(--bg-body-dark);
+  --bg-header: var(--bg-header-dark);
+  --text-primary: var(--text-primary-dark);
+  --primary: var(--primary-dark);
+  --accent: var(--accent-dark);
+  --border: var(--border-dark);
+  --text-secondary: var(--text-secondary-dark);
+  --disabled: var(--disabled-dark);
+  
+  /* 布局变量 */
+  --sidebar-width: 240px;
+  --titlebar-height: 60px;
+  --playerbar-height: 80px;
+  --border-radius: 8px;
+  --border-radius-small: 4px;
+  
+  /* 动画变量 */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* 阴影 */
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* 浅色主题 */
+.light-theme {
+  --bg-body: var(--bg-body-light);
+  --bg-header: var(--bg-header-light);
+  --text-primary: var(--text-primary-light);
+  --primary: var(--primary-light);
+  --accent: var(--accent-light);
+  --border: var(--border-light);
+  --text-secondary: var(--text-secondary-light);
+  --disabled: var(--disabled-light);
+  
+  /* RGB颜色变量用于透明度 */
+  --primary-rgb: 221, 51, 51;
+  --accent-rgb: 255, 136, 0;
+  --bg-header-rgb: 248, 248, 248;
+}
+
+/* 基础重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'HYRunYuan-35S', 'Arial-Unicode', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-body);
+  color: var(--text-primary);
+  overflow: hidden;
+  user-select: none;
+  transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+/* 应用容器 */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--bg-body) 0%, var(--bg-header) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-large);
+}
+
+/* 图标样式 */
+.icon, .nav-icon, .section-icon, .btn-icon, .play-icon, .control-icon, .control-icon-main, .extra-icon, .volume-icon, .menu-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  filter: var(--icon-filter);
+  transition: all var(--transition-fast);
+}
+
+.control-icon-main {
+  width: 20px;
+  height: 20px;
+}
+
+.section-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* 主题适配的图标滤镜 */
+:root {
+  --icon-filter: none;
+}
+
+.light-theme {
+  --icon-filter: brightness(0.2);
+}
+
+/* Unicode 图标样式 */
+.theme-text, .view-icon, .heart-icon, .more-icon {
+  font-size: 16px;
+  line-height: 1;
+  user-select: none;
+}
+
+/* 标题栏 */
+.title-bar {
+  display: flex;
+  align-items: center;
+  height: var(--titlebar-height);
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  -webkit-app-region: drag;
+  transition: all var(--transition-normal);
+}
+
+.title-bar-left {
+  display: flex;
+  align-items: center;
+  flex: 0 0 300px;
+  gap: 12px;
+}
+
+.app-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius-small);
+}
+
+.app-title {
+  font-family: 'HYRunYuan-65S', 'Arial-Unicode', sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.current-song-title {
+  font-family: 'HYRunYuan-35S', 'Arial-Unicode', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-left: 8px;
+  opacity: 0;
+  animation: slideInFade 0.5s var(--bounce) 1s forwards;
+}
+
+.title-bar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  -webkit-app-region: no-drag;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  height: 36px;
+  background: var(--bg-body);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 0 40px 0 40px;
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(108, 160, 220, 0.1);
+  transform: scale(1.02);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.title-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+.theme-toggle-btn,
+.settings-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.theme-toggle-btn:hover,
+.settings-btn:hover {
+  background: var(--bg-body);
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+.window-controls {
+  display: flex;
+  gap: 4px;
+  margin-left: 12px;
+}
+
+.control-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.control-btn:hover {
+  background: var(--bg-body);
+}
+
+.control-btn.close:hover {
+  background: #ff5f56;
+  color: white;
+}
+
+/* 主内容区 */
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 侧边栏 */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-header);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  overflow-y: auto;
+  transition: all var(--transition-normal);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(var(--bg-header-rgb), 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-section {
+  margin-bottom: 32px;
+  padding: 0 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'HYRunYuan-45S', 'Arial-Unicode', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-title .add-playlist-btn {
+  margin-left: auto;
+}
+
+.add-playlist-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.add-playlist-btn:hover {
+  background: var(--primary);
+  color: white;
+  transform: rotate(90deg);
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--primary);
+  transform: scaleY(0);
+  transition: transform var(--transition-fast);
+}
+
+.nav-item:hover {
+  background: var(--bg-body);
+  transform: translateX(4px);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
+}
+
+.nav-item.active::before {
+  transform: scaleY(1);
+}
+
+.nav-item i {
+  width: 16px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* 专辑封面占位符 */
+.song-cover-placeholder, .current-cover-placeholder {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  border-radius: var(--border-radius-small);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
+}
+
+.song-cover-placeholder::before, .current-cover-placeholder::before {
+  content: '♪';
+  color: white;
+  font-size: 18px;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.current-cover-placeholder {
+  width: 56px;
+  height: 56px;
+}
+
+.current-cover-placeholder::before {
+  font-size: 24px;
+}
+
+.song-item:hover .song-cover-placeholder {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.4);
+}
+
+.count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-body);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* 内容区域 */
+.content-area {
+  flex: 1;
+  background: var(--bg-body);
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* 横幅区域 */
+.hero-banner {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.banner-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+}
+
+.banner-slide.active {
+  opacity: 1;
+}
+
+.banner-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  opacity: 0.8;
+}
+
+.banner-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+}
+
+.banner-content {
+  position: relative;
+  padding: 40px;
+  color: white;
+  z-index: 2;
+}
+
+.banner-title {
+  font-family: 'HYRunYuan-65S', 'Arial-Unicode', sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: slideUp 0.8s var(--bounce) 0.2s forwards;
+}
+
+.banner-subtitle {
+  font-family: 'HYRunYuan-35S', 'Arial-Unicode', sans-serif;
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: slideUp 0.8s var(--bounce) 0.4s forwards;
+}
+
+.play-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  cursor: pointer;
+  font-family: 'HYRunYuan-45S', 'Arial-Unicode', sans-serif;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-fast);
+  opacity: 0;
+  animation: slideUp 0.8s var(--bounce) 0.6s forwards;
+}
+
+.play-all-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* 操作栏 */
+.action-bar {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+}
+
+.action-btn.primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-small);
+}
+
+.action-btn.primary:hover {
+  background: var(--accent);
+  box-shadow: var(--shadow-medium);
+}
+
+/* 列表头部样式 */
+.list-header {
+  display: grid;
+  grid-template-columns: 60px 1fr 200px 200px 80px 80px;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-family: 'HYRunYuan-45S', 'Arial-Unicode', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.header-cell {
+  display: flex;
+  align-items: center;
+}
+
+.header-cell.index {
+  justify-content: center;
+}
+
+/* 歌曲项目网格 */
+.song-item {
+  display: grid;
+  grid-template-columns: 60px 1fr 200px 200px 80px 80px;
+  gap: 16px;
+  padding: 12px 0;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
+  position: relative;
+  cursor: pointer;
+}
+
+.song-item:hover {
+  background: rgba(var(--primary-rgb), 0.05);
+  transform: translateX(4px) translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.song-item.playing {
+  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.1) 0%, transparent 100%);
+  border-left: 3px solid var(--primary);
+  padding-left: calc(12px - 3px);
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.2);
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.cell.index {
+  justify-content: center;
+  position: relative;
+}
+
+.song-number {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.play-btn {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all var(--transition-fast);
+}
+
+.song-item:hover .play-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.song-item.playing .play-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.song-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.song-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-small);
+  object-fit: cover;
+  transition: transform var(--transition-fast);
+}
+
+.song-item:hover .song-cover {
+  transform: scale(1.05);
+}
+
+.song-details {
+  min-width: 0;
+  flex: 1;
+}
+
+.song-name {
+  font-family: 'HYRunYuan-45S', 'Arial-Unicode', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-tags {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.tag {
+  font-family: 'HYRunYuan-35S', 'Arial-Unicode', sans-serif;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--bg-header);
+  color: var(--text-secondary);
+}
+
+.tag.quality {
+  background: var(--primary);
+  color: white;
+}
+
+.cell.artist,
+.cell.album {
+  font-family: 'HYRunYuan-35S', 'Arial-Unicode', sans-serif;
+  color: var(--text-secondary);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell.duration {
+  font-family: 'Arial-Unicode', monospace;
+  color: var(--text-secondary);
+  font-size: 14px;
+  justify-content: center;
+}
+
+.cell.actions {
+  justify-content: flex-end;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.song-item:hover .cell.actions {
+  opacity: 1;
+}
+
+.action-icon {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.action-icon:hover {
+  background: var(--bg-body);
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+/* 播放器栏 */
+.player-bar {
+  display: flex;
+  align-items: center;
+  height: var(--playerbar-height);
+  background: var(--bg-header);
+  border-top: 1px solid var(--border);
+  padding: 0 24px;
+  gap: 24px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(var(--bg-header-rgb), 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-info {
+  flex: 0 0 280px;
+  display: flex;
+  align-items: center;
+}
+
+.current-song {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.current-cover {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--border-radius);
+  object-fit: cover;
+  transition: transform var(--transition-fast);
+}
+
+.current-cover.rotating {
+  animation: rotate 20s linear infinite;
+}
+
+.song-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.song-title {
+  font-family: 'HYRunYuan-45S', 'Arial-Unicode', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-artist {
+  font-family: 'HYRunYuan-35S', 'Arial-Unicode', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* 播放控制 */
+.player-controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.control-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.control-btn:hover {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+.control-btn.main-play {
+  width: 48px;
+  height: 48px;
+  background: var(--primary);
+  color: white;
+  font-size: 18px;
+}
+
+.control-btn.main-play:hover {
+  background: var(--accent);
+  transform: scale(1.05);
+}
+
+.control-btn.shuffle.active,
+.control-btn.repeat.active {
+  color: var(--primary);
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.time {
+  font-family: 'Arial-Unicode', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 40px;
+  text-align: center;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  cursor: pointer;
+}
+
+.progress-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3);
+  border-radius: 3px;
+  transition: width var(--transition-fast);
+}
+
+.progress-handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.progress-bar:hover .progress-handle {
+  opacity: 1;
+}
+
+/* 播放器额外功能 */
+.player-extras {
+  flex: 0 0 200px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.extra-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.extra-btn:hover {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.volume-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.volume-btn:hover {
+  color: var(--primary);
+}
+
+.volume-slider {
+  width: 80px;
+  height: 4px;
+  cursor: pointer;
+}
+
+.volume-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.volume-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3);
+  border-radius: 2px;
+  transition: width var(--transition-fast);
+}
+
+.volume-handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.volume-slider:hover .volume-handle {
+  opacity: 1;
+}
+
+/* 上下文菜单 */
+.context-menu {
+  position: fixed;
+  background: var(--bg-header);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-large);
+  padding: 8px 0;
+  min-width: 160px;
+  z-index: 1000;
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+  transition: all var(--transition-fast);
+}
+
+.context-menu.show {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.menu-item:hover {
+  background: var(--bg-body);
+}
+
+.menu-item i {
+  width: 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.menu-separator {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* 动画 */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFade {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* 现代化增强效果 */
+
+/* 毛玻璃卡片效果 */
+.sidebar, .player-bar, .title-bar {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(var(--bg-header-rgb), 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 悬浮效果 */
+.song-item:hover {
+  background: rgba(var(--primary-rgb), 0.05);
+  transform: translateX(4px) translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 活跃状态增强 */
+.song-item.playing {
+  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.1) 0%, transparent 100%);
+  border-left: 3px solid var(--primary);
+  padding-left: calc(12px - 3px);
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.2);
+}
+
+/* 按钮悬浮效果 */
+.action-btn:hover, .play-all-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(var(--primary-rgb), 0.3);
+}
+
+/* 播放按钮脉冲效果 */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  80%, 100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.main-play:hover::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* 渐变文字效果 */
+.app-title {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 进度条增强 */
+.progress-fill, .volume-fill {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3);
+}
+
+/* 搜索框聚焦效果 */
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1), 0 4px 12px rgba(var(--primary-rgb), 0.15);
+  transform: scale(1.02);
+}
+
+/* 工具提示样式 */
+[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-bottom: 5px;
+}
+
+/* 修复和优化 */
+.main-play {
+  position: relative;
+  overflow: visible;
+}
+
+/* 图标样式优化 */
+.icon, .nav-icon, .section-icon, .btn-icon, .play-icon, .control-icon, .control-icon-main, .extra-icon, .volume-icon, .menu-icon {
+  transition: all var(--transition-fast);
+  filter: var(--icon-filter);
+}
+
+/* 悬停效果优化 */
+button:hover .icon, button:hover .nav-icon, button:hover .control-icon, button:hover .control-icon-main {
+  transform: scale(1.1);
+}
+
+/* 主题切换按钮优化 */
+.theme-toggle-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all var(--transition-normal);
+  opacity: 0;
+}
+
+.theme-toggle-btn:hover::before {
+  width: 100px;
+  height: 100px;
+  opacity: 0.1;
+}
+
+/* 空白页面样式 */
+.empty-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 48px 24px;
+}
+
+.empty-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.page-title {
+  font-family: 'HYRunYuan-55S', 'Arial-Unicode', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.page-subtitle {
+  font-family: 'HYRunYuan-35S', 'Arial-Unicode', sans-serif;
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}

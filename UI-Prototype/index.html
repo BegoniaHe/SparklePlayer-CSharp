@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparkle Player - UI Prototype</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 主窗口容器 -->
+    <div class="app-container" id="appContainer">
+        <!-- 顶部标题栏 -->
+        <div class="title-bar">
+            <div class="title-bar-left">
+                <img src="assets/Icons/appicon.ico" alt="Sparkle Player" class="app-icon">
+                <span class="app-title">Sparkle Player</span>
+                <span class="current-song-title">Hectopascal - 寿美菜子/高田憂希</span>
+            </div>
+            <div class="title-bar-center">
+                <div class="search-container">
+                    <img src="assets/Icons/music_icon_227430_d.ico" alt="搜索" class="search-icon">
+                    <input type="text" placeholder="搜索歌曲/歌手/专辑" class="search-input">
+                </div>
+            </div>
+            <div class="title-bar-right">
+                <button class="theme-toggle-btn" id="themeToggle">
+                    <span class="theme-text">D</span>
+                </button>
+                <button class="settings-btn">
+                    <img src="assets/Icons/settings_icon_d.ico" alt="设置" class="icon">
+                </button>
+                <div class="window-controls">
+                    <button class="control-btn minimize">−</button>
+                    <button class="control-btn maximize">□</button>
+                    <button class="control-btn close">×</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 左侧导航栏 -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="section-title">
+                        <img src="assets/Icons/music_icon_227430_d.ico" alt="音乐库" class="section-icon">
+                        音乐库
+                    </h3>
+                    <nav class="nav-menu">
+                        <a href="#" class="nav-item">
+                            <img src="assets/Icons/music_album_icon_227414_d.ico" alt="推荐" class="nav-icon">
+                            <span>推荐</span>
+                        </a>
+                        <a href="#" class="nav-item active">
+                            <img src="assets/Icons/music_icon_227430_d.ico" alt="歌曲" class="nav-icon">
+                            <span>歌曲</span>
+                            <span class="count">3218</span>
+                        </a>
+                        <a href="#" class="nav-item">
+                            <img src="assets/Icons/music_album_icon_227414_d.ico" alt="专辑" class="nav-icon">
+                            <span>专辑</span>
+                        </a>
+                        <a href="#" class="nav-item">
+                            <img src="assets/Icons/artist_music_icon_227416_d.ico" alt="歌手" class="nav-icon">
+                            <span>歌手</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="section-title">
+                        <img src="assets/Icons/playlist_icon_227431_d.ico" alt="播放列表" class="section-icon">
+                        播放列表
+                        <button class="add-playlist-btn">
+                            <span>+</span>
+                        </button>
+                    </h3>
+                    <nav class="nav-menu">
+                        <a href="#" class="nav-item">
+                            <img src="assets/Icons/playlist_icon_227431_d.ico" alt="我的歌单" class="nav-icon">
+                            <span>我的歌单</span>
+                            <span class="count">0</span>
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- 中央内容区域 -->
+            <main class="content-area">
+                <!-- 横幅区域 -->
+                <section class="hero-banner">
+                    <div class="banner-slide active">
+                        <div class="banner-background">
+                            <img src="assets/banner1.jpg" alt="Featured Music">
+                        </div>
+                        <div class="banner-content">
+                            <h2 class="banner-title">全部音乐</h2>
+                            <p class="banner-subtitle">发现你喜欢的音乐</p>
+                            <button class="play-all-btn">
+                                <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="btn-icon">
+                                全部播放 (共3218首)
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 功能按钮区 -->
+                <section class="action-bar">
+                    <div class="action-buttons">
+                        <button class="action-btn primary">
+                            <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="btn-icon">
+                            播放全部
+                        </button>
+                        <button class="action-btn">
+                            <img src="assets/Icons/playlist_shuffle_icon_227435_d.ico" alt="随机播放" class="btn-icon">
+                            随机播放
+                        </button>
+                    </div>
+                </section>
+
+                <!-- 歌曲列表 -->
+                <section class="song-list">
+                    <div class="list-header">
+                        <div class="header-cell index">#</div>
+                        <div class="header-cell title">歌曲</div>
+                        <div class="header-cell artist">艺术家</div>
+                        <div class="header-cell album">专辑</div>
+                        <div class="header-cell duration">时长</div>
+                        <div class="header-cell actions"></div>
+                    </div>
+                    
+                    <div class="song-items">
+                        <!-- 歌曲项目 -->
+                        <div class="song-item playing" data-song="1">
+                            <div class="cell index">
+                                <span class="song-number">1</span>
+                                <button class="play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                </button>
+                            </div>
+                            <div class="cell title">
+                                <div class="song-info">
+                                    <div class="song-cover-placeholder"></div>
+                                    <div class="song-details">
+                                        <span class="song-name">ゆめいろハナミズキ</span>
+                                        <div class="song-tags">
+                                            <span class="tag quality">182K</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell artist">東山奈央</div>
+                            <div class="cell album">ゆめいろハナミズキ</div>
+                            <div class="cell duration">03:57</div>
+                            <div class="cell actions">
+                                <button class="action-icon more">
+                                    <span class="more-icon">⋯</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="song-item" data-song="2">
+                            <div class="cell index">
+                                <span class="song-number">2</span>
+                                <button class="play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                </button>
+                            </div>
+                            <div class="cell title">
+                                <div class="song-info">
+                                    <div class="song-cover-placeholder"></div>
+                                    <div class="song-details">
+                                        <span class="song-name">汎用合成クラスメイト・宇佐見05号</span>
+                                        <div class="song-tags">
+                                            <span class="tag quality">135K</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell artist">めらみぽっぷ/滑叶櫻</div>
+                            <div class="cell album">東方compilation CD 若葉箱</div>
+                            <div class="cell duration">04:21</div>
+                            <div class="cell actions">
+                                <button class="action-icon more">
+                                    <span class="more-icon">⋯</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="song-item" data-song="3">
+                            <div class="cell index">
+                                <span class="song-number">3</span>
+                                <button class="play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                </button>
+                            </div>
+                            <div class="cell title">
+                                <div class="song-info">
+                                    <div class="song-cover-placeholder"></div>
+                                    <div class="song-details">
+                                        <span class="song-name">トライアングル</span>
+                                        <div class="song-tags">
+                                            <span class="tag quality">130K</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell artist">藤田麻衣子/美聖子</div>
+                            <div class="cell album">wish～キボウ～</div>
+                            <div class="cell duration">05:12</div>
+                            <div class="cell actions">
+                                <button class="action-icon more">
+                                    <span class="more-icon">⋯</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="song-item" data-song="4">
+                            <div class="cell index">
+                                <span class="song-number">4</span>
+                                <button class="play-btn">
+                                    <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="play-icon">
+                                </button>
+                            </div>
+                            <div class="cell title">
+                                <div class="song-info">
+                                    <div class="song-cover-placeholder"></div>
+                                    <div class="song-details">
+                                        <span class="song-name">青い空のカミュ full</span>
+                                        <div class="song-tags">
+                                            <span class="tag quality">146K</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell artist">神月はるか/BLUE DOOR RECORD</div>
+                            <div class="cell album">青い空のカミュ Original Soundtrack</div>
+                            <div class="cell duration">04:33</div>
+                            <div class="cell actions">
+                                <button class="action-icon more">
+                                    <span class="more-icon">⋯</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- 底部播放控制栏 -->
+        <footer class="player-bar">
+            <!-- 歌曲信息区 -->
+            <div class="player-info">
+                <div class="current-song">
+                    <div class="current-cover-placeholder rotating"></div>
+                    <div class="song-details">
+                        <div class="song-title">hectopascal</div>
+                        <div class="song-artist">寿美菜子/高田憂希 - Hectopascal</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 播放控制区 -->
+            <div class="player-controls">
+                <div class="control-buttons">
+                    <button class="control-btn shuffle" title="随机播放">
+                        <img src="assets/Icons/playlist_shuffle_icon_227435_d.ico" alt="随机播放" class="control-icon">
+                    </button>
+                    <button class="control-btn previous" title="上一首">
+                        <img src="assets/Icons/player_start_icon_227413_d.ico" alt="上一首" class="control-icon">
+                    </button>
+                    <button class="control-btn play-pause main-play" title="播放/暂停">
+                        <img src="assets/Icons/pause_player_icon_227425_d.ico" alt="暂停" class="control-icon-main">
+                    </button>
+                    <button class="control-btn next" title="下一首">
+                        <img src="assets/Icons/end_player_icon_227436_d.ico" alt="下一首" class="control-icon">
+                    </button>
+                    <button class="control-btn repeat" title="循环播放">
+                        <img src="assets/Icons/repeat_playlist_list_icon_227428_d.ico" alt="循环播放" class="control-icon">
+                    </button>
+                </div>
+                
+                <div class="progress-container">
+                    <span class="time current-time">00:00</span>
+                    <div class="progress-bar">
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 45%"></div>
+                            <div class="progress-handle" style="left: 45%"></div>
+                        </div>
+                    </div>
+                    <span class="time total-time">03:57</span>
+                </div>
+            </div>
+
+            <!-- 音量和功能区 -->
+            <div class="player-extras">
+                <button class="extra-btn queue" title="播放队列">
+                    <img src="assets/Icons/playlist_icon_227431_d.ico" alt="播放队列" class="extra-icon">
+                </button>
+                <div class="volume-control">
+                    <button class="volume-btn" title="音量">
+                        <img src="assets/Icons/up_volume_icon_227422_d.ico" alt="音量" class="volume-icon">
+                    </button>
+                    <div class="volume-slider">
+                        <div class="volume-track">
+                            <div class="volume-fill" style="width: 70%"></div>
+                            <div class="volume-handle" style="left: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 上下文菜单 -->
+    <div class="context-menu" id="contextMenu">
+        <div class="menu-item">
+            <img src="assets/Icons/player_play_icon_227418_d.ico" alt="播放" class="menu-icon">
+            <span>播放</span>
+        </div>
+        <div class="menu-item">
+            <img src="assets/Icons/playlist_icon_227431_d.ico" alt="添加到播放列表" class="menu-icon">
+            <span>添加到播放列表</span>
+        </div>
+        <div class="menu-separator"></div>
+        <div class="menu-item">
+            <span class="menu-icon">ℹ</span>
+            <span>歌曲信息</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

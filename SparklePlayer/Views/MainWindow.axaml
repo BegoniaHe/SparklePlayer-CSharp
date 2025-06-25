@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="SparklePlayer.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/appicon.ico"
+        Icon="/Assets/Icons/appicon.ico"
         Title="SparklePlayer"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
