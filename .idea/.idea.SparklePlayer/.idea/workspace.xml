@@ -9,8 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="cd71272c-4077-45e4-894d-602bef93e673" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/Assets/appicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SparklePlayer.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer.sln.DotSettings.user" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +24,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9a5cc8ddf36e8c8f422071f068cc8edb16e814991aa851aa131f3fa14425ed/Application.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e49d9521ff091d353928d1c44539ba0a4c93a9ebb2e65190880b4fe5eb8/StyledElement.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -100,6 +100,7 @@
       <workItem from="1750762808533" duration="8492000" />
       <workItem from="1750784832045" duration="838000" />
       <workItem from="1750799598270" duration="5797000" />
+      <workItem from="1750874768380" duration="710000" />
     </task>
     <servers />
   </component>
