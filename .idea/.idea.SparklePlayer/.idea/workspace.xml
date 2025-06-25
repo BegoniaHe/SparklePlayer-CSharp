@@ -8,9 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd71272c-4077-45e4-894d-602bef93e673" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/SparklePlayer/Styles/Dark.axaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SparklePlayer/Styles/Light.axaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SparklePlayer/Styles/Themes.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Styles/Themes.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SparklePlayer/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SparklePlayer/Views/MainWindow.axaml.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,6 +99,7 @@
       <workItem from="1750748628766" duration="1000000" />
       <workItem from="1750762808533" duration="8492000" />
       <workItem from="1750784832045" duration="838000" />
+      <workItem from="1750799598270" duration="3486000" />
     </task>
     <servers />
   </component>
